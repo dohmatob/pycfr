@@ -476,6 +476,15 @@ class Node(object):
         else:
             self.children.append(child)
 
+    def __repr__(self):
+        """For pretty-print the node."""
+        tokenize = lambda stuff: ('"%s"' % stuff) if isinstance(
+            stuff, basestring) else stuff
+        return "%s(" % (self.__class__.__name__) + ", ".join(
+            ["%s=%s" % (k, tokenize(getattr(self, k)))
+             for k in ["bet_history", "deck", "holecards", "player",
+                       "player_view", "committed"] if hasattr(self, k)]) + ")"
+
 
 class TerminalNode(Node):
     def __init__(self, parent, committed, holecards, board, deck, bet_history,

@@ -1,23 +1,24 @@
 import sys
 import os
-sys.path.insert(0,os.path.realpath('.'))
+sys.path.insert(0, os.path.realpath('.'))
 from pokerstrategy import *
 from pokergames import *
 from pokercfr import *
+
 
 def near(val, expected, distance=0.0001):
     return val >= (expected - distance) and val <= (expected + distance)
 
 print ''
 print ''
-print 'Testing CFR'
+print 'Testing Public Chance Sampling (PCS) CFR'
 print ''
 print ''
-
+"""
 print 'Computing NE for Half-Street Kuhn poker'
 
 hskuhn = half_street_kuhn_rules()
-cfr = CounterfactualRegretMinimizer(hskuhn)
+cfr = PublicChanceSamplingCFR(hskuhn)
 iterations_per_block = 1000
 blocks = 10
 for block in range(blocks):
@@ -46,13 +47,13 @@ assert(near(cfr.profile.strategies[1].policy['A:/r:'][CALL], 1.0, 0.01))
 
 print 'Done!'
 print ''
-
+"""
 print 'Computing NE for Leduc poker'
 leduc = leduc_rules()
 
-cfr = CounterfactualRegretMinimizer(leduc)
+cfr = PublicChanceSamplingCFR(leduc)
 
-iterations_per_block = 10
+iterations_per_block = 1000
 blocks = 1000
 for block in range(blocks):
     print 'Iterations: {0}'.format(block * iterations_per_block)

@@ -1,25 +1,45 @@
 import sys
 import os
-sys.path.insert(0,os.path.realpath('.'))
+sys.path.insert(0, os.path.realpath('.'))
 from pokerstrategy import *
 from pokergames import *
 from pokercfr import *
+
 
 def near(val, expected, distance=0.0001):
     return val >= (expected - distance) and val <= (expected + distance)
 
 print ''
 print ''
-print 'Testing Chance Sampling (CS) CFR'
+print 'Testing Outcome Sampling (OS) CFR'
 print ''
 print ''
 
+"""
+print 'Computing NE for Kuhn poker'
+kuhn = kuhn_rules()
+
+cfr = OutcomeSamplingCFR(kuhn)
+
+iterations_per_block = 1000
+blocks = 100
+for block in range(blocks):
+    print 'Iterations: {0}'.format(block * iterations_per_block)
+    cfr.run(iterations_per_block)
+    result = cfr.profile.best_response()
+    print 'Best response EV: {0}'.format(result[1])
+    print 'Total exploitability: {0}'.format(sum(result[1]))
+print 'Done!'
+print ''
+"""
+
+"""
 print 'Computing NE for Half-Street Kuhn poker'
 
 hskuhn = half_street_kuhn_rules()
-cfr = ChanceSamplingCFR(hskuhn)
-iterations_per_block = 1000
-blocks = 50
+cfr = OutcomeSamplingCFR(hskuhn)
+iterations_per_block = 10000
+blocks = 100
 for block in range(blocks):
     print 'Iterations: {0}'.format(block * iterations_per_block)
     cfr.run(iterations_per_block)
@@ -46,13 +66,14 @@ assert(near(cfr.profile.strategies[1].policy['A:/r:'][CALL], 1.0, 0.01))
 
 print 'Done!'
 print ''
+"""
 
 print 'Computing NE for Leduc poker'
 leduc = leduc_rules()
 
-cfr = ChanceSamplingCFR(leduc)
+cfr = OutcomeSamplingCFR(leduc)
 
-iterations_per_block = 1000
+iterations_per_block = 10000
 blocks = 1000
 for block in range(blocks):
     print 'Iterations: {0}'.format(block * iterations_per_block)

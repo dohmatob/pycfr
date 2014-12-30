@@ -10,8 +10,8 @@ Creating a game tree
 To generate a tree for a game, simply specify the rules of the game:
 
 ```python
-from pokertrees import *
-from pokergames import *
+from pycfr.pokertrees import *
+from pycfr.pokergames import *
 players = 2
 deck = [Card(14,1),Card(13,2),Card(13,1),Card(12,1)]
 rounds = [RoundInfo(holecards=1,boardcards=0,betsize=2,maxbets=[2,2]),RoundInfo(holecards=0,boardcards=1,betsize=4,maxbets=[2,2])]
@@ -25,7 +25,7 @@ gametree.build()
 Or use one of the pre-built games:
 
 ```python
-from pokergames import *
+from pycfr.pokergames import *
 gametree = leduc_gametree()
 ```
 
@@ -34,9 +34,9 @@ Evaluating a strategy profile
 You can calculate the expected value of a set of strategies for a game:
 
 ```python
-from pokertrees import *
-from pokergames import *
-from pokerstrategy import *
+from pycfr.pokertrees import *
+from pycfr.pokergames import *
+from pycfr.pokerstrategy import *
 rules = leduc_rules()
 
 # load first player strategy
@@ -58,9 +58,9 @@ Getting the best response strategy
 Given a strategy profile, you can calculate the best response strategy for each agent:
 
 ```python
-from pokertrees import *
-from pokergames import *
-from pokerstrategy import *
+from pycfr.pokertrees import *
+from pycfr.pokergames import *
+from pycfr.pokerstrategy import *
 rules = leduc_rules()
 
 # load first player strategy
@@ -95,7 +95,7 @@ Given the rules for a game, you can run the Counterfactual Regret (CFR) Minimiza
 hskuhn = half_street_kuhn_rules()
 
 # Create the CFR minimizer
-from  pokercfr import CounterfactualRegretMinimizer
+from pycfr. pokercfr import CounterfactualRegretMinimizer
 cfr = CounterfactualRegretMinimizer(hskuhn)
 
 # Run a number of iterations, determining the exploitability of the agents periodically

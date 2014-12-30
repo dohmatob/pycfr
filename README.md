@@ -114,7 +114,14 @@ nash_strategies = cfr.profile
 
 Tests
 -----
-Tests for the game tree code are implemented in the `tests` directory. WARNING: Tests using Leduc poker are slow due to the size of the game.
+Tests for the game tree code are implemented in the `pycfr/tests` directory.
+
+Run tests like so:
+
+    nosetests -s
+
+
+Tests are organized as follows:
 
 - test_gametree.py - Tests the game tree functionality against a leduc-like game and verifies some branches are built as expected.
 

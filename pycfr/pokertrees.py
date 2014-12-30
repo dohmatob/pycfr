@@ -18,11 +18,17 @@ def overlap(t1, t2):
     return False
 
 
-def all_unique(hc):
+def all_unique(hc, shutdown=False):
     for i in range(len(hc) - 1):
         for j in range(i + 1, len(hc)):
             if overlap(hc[i], hc[j]):
-                return False
+                # every item in hc must be unique, except perhaps when we're
+                # trying to build possible hands at shutdown!
+                if shutdown:
+                    return False
+                else:
+                    raise RuntimeError("This shouldn't be happening! hc=%s" % (
+                        list(hc)))
     return True
 
 
@@ -32,6 +38,21 @@ def default_infoset_format(_, holecards, board, bet_history):
 
 
 class GameRules(object):
+    """Game rules of a finte multi-round game.
+
+    Parameters
+    ----------
+    players: int
+        Number of players.
+
+    rounds: list of `RoundInfo` object
+        Each item specifies the rules for the given round.
+
+    deck: list of `Card` objects
+        ...
+
+    """
+
     def __init__(self, players, deck, rounds, ante, blinds,
                  handeval=HandEvaluator.evaluate_hand,
                  infoset_format=default_infoset_format):
@@ -203,7 +224,7 @@ class GameTree(object):
         anode = ActionNode(root, committed, holes, board, deck,
                            bet_history, next_player, self.rules.infoset_format)
         # add the node to the information set
-        if not (anode.player_view in self.information_sets):
+        if anode.player_view not in self.information_sets:
             self.information_sets[anode.player_view] = []
         self.information_sets[anode.player_view].append(anode)
         # get the next player to act
@@ -438,7 +459,8 @@ class PublicTree(GameTree):
         # Get all the possible holecard matchups for a given showdown.
         # Every card must be unique because two players cannot have the same
         # holecard.
-        return list(filter(lambda x: all_unique(x), product(*holes)))
+        return list(filter(lambda x: all_unique(x, shutdown=True),
+                           product(*holes)))
 
     def calc_payoffs(self, hands, scores, players_in, committed, pot):
         winners = []

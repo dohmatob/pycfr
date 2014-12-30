@@ -312,6 +312,11 @@ class GameTree(object):
         d = float(sum(x.values()))
         return zip(x.keys(), [y / d for y in x.values()])
 
+    def get_player_information_sets(self, player):
+        """Returns all information sets belonging to given player."""
+        return dict((k, v) for k, v in self.information_sets.iteritems()
+                    if v[0].player == player)
+
 
 def multi_infoset_format(base_infoset_format, player, holecards, board,
                          bet_history):

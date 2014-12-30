@@ -63,7 +63,10 @@ class Strategy(object):
                         self.policy[node.player_view] = probs
 
     def probs(self, infoset):
-        assert(infoset in self.policy)
+        if infoset not in self.policy:
+            raise KeyError(
+                "Information set '%s' doesn'nt belong to policy %s" % (
+                    infoset, self.policy.keys()))
         return self.policy[infoset]
 
     def sample_action(self, infoset):
@@ -76,7 +79,8 @@ class Strategy(object):
             if p > 0 and val <= total:
                 return i
         raise Exception(
-            'Invalid probability distribution. Infoset: {0} Probs: {1}'.format(infoset, probs))
+            'Invalid probability distribution. Infoset: {0} Probs: {1}'.format(
+                infoset, probs))
 
     def load_from_file(self, filename):
         self.policy = {}

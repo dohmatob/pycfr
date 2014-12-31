@@ -1,6 +1,4 @@
-from itertools import combinations
-from itertools import permutations
-from itertools import product
+from itertools import combinations, permutations, product
 from collections import Counter
 from hand_evaluator import HandEvaluator
 from copy import deepcopy
@@ -14,6 +12,7 @@ RAISE = 2
 
 
 def overlap(t1, t2):
+    """Helper function to check whether two iterables t1 and t2 overlap."""
     for x in t1:
         if x in t2:
             return True
@@ -21,13 +20,15 @@ def overlap(t1, t2):
 
 
 def all_unique(hc):
+    """Helper function that the elements of hc are pairwise non-overlapping."""
     for i in range(len(hc) - 1):
         for j in range(i + 1, len(hc)):
             if overlap(hc[i], hc[j]):
                 return False
-    return True
+    return
 
 
+# Combinatoric helper functions.
 def factorial(n):
     if n < 0:
         raise RuntimeError("n=%i" % n)

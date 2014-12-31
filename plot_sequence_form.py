@@ -2,9 +2,9 @@
 Building game tree and sequence-form representation for Leduc and Kuhn pokers.
 """
 
+import matplotlib.pyplot as plt
 from pycfr.pokergames import (leduc_gametree, kuhn_gametree,
                               half_street_kuhn_gametree)
-import matplotlib.pyplot as plt
 
 for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
                        [kuhn_gametree, leduc_gametree,

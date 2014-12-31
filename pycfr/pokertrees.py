@@ -164,7 +164,7 @@ class GameTree(object):
         if with_sequence_form:
             self.build_sequences()
             self.build_constraints()
-            self.build_payoff_matrix()
+            self.build_payoff_matrices()
 
     def collect_blinds(self, committed, bets, next_player):
         if self.rules.blinds is not None:
@@ -528,6 +528,7 @@ class GameTree(object):
             row = np.zeros(len(self.sequences[player]))
             row[0] = 1.
             E = [row]
+
             # loop over sequences for player
             for i, sigma in enumerate(self.sequences[player]):
                 mem = {}
@@ -552,7 +553,7 @@ class GameTree(object):
             self.constraints[player] = np.array(E), e
         return self.constraints
 
-    def build_payoff_matrix(self):
+    def build_payoff_matrices(self):
         """Builds payoff matrices for multi-matrix game.
 
         Returns

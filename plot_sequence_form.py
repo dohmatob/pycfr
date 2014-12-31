@@ -35,5 +35,4 @@ for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
         plt.title(["$A$", "$B$"][player])
     plt.tight_layout()
     print "_" * 80
-
 plt.show()

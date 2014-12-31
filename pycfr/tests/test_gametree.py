@@ -1,8 +1,9 @@
+from nose.tools import assert_equal
 from ..pokertrees import (GameTree, PublicTree, GameRules, RoundInfo,
                           HolecardChanceNode, BoardcardChanceNode,
                           ActionNode, TerminalNode)
 from ..card import Card
-from ..pokergames import leduc_eval
+from ..pokergames import leduc_eval, kuhn_eval, leduc_format
 
 
 rules = GameRules(players=2, deck=[Card(14, 1), Card(13, 2), Card(13, 1),
@@ -225,3 +226,20 @@ def test_publictree():
            1].children[1].children[1].bet_history == '/cc/rc')
     assert(tree.root.children[0].children[1].children[0].children[1].children[1].children[1].payoffs == {((Card(13, 1),), (Card(14, 1),)): [5, -5], ((Card(13, 1),), (Card(12, 1),)): [
            5, -5], ((Card(14, 1),), (Card(13, 1),)): [-5, 5], ((Card(14, 1),), (Card(12, 1),)): [5, -5], ((Card(12, 1),), (Card(14, 1),)): [-5, 5], ((Card(12, 1),), (Card(13, 1),)): [-5, 5]})
+
+
+def test_deal_holecards():
+    players = 2
+    deck = [Card(14, 1), Card(13, 1), Card(12, 1)]
+    ante = 1
+    blinds = None
+    rounds = [RoundInfo(holecards=1, boardcards=0, betsize=1, maxbets=[1, 1])]
+    rules = GameRules(players, deck, rounds, ante, blinds, handeval=kuhn_eval,
+                     infoset_format=leduc_format)
+    tree = GameTree(rules)
+    holes, proba = tree.deal_holecards(tree.rules.deck,
+                                       tree.rules.roundinfo[0].holecards,
+                                       tree.rules.players)
+    holes = list(holes)
+    assert_equal(len(holes), 6)
+    assert_equal(proba, 1. / len(holes))

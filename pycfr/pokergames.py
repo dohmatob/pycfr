@@ -36,6 +36,7 @@ def kuhn_rules():
     ante = 1
     blinds = None
     rounds = [RoundInfo(holecards=1, boardcards=0, betsize=1, maxbets=[1, 1])]
+
     return GameRules(players, deck, rounds, ante, blinds, handeval=kuhn_eval,
                      infoset_format=leduc_format)
 

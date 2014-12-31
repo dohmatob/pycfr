@@ -6,6 +6,8 @@ from hand_evaluator import HandEvaluator
 from copy import deepcopy
 from functools import partial
 
+# Possible player actions. Note that a check is equivalent to calling 0
+# (a "free call") and so is omitted from the code
 FOLD = 0
 CALL = 1
 RAISE = 2
@@ -18,18 +20,19 @@ def overlap(t1, t2):
     return False
 
 
-def all_unique(hc, shutdown=False):
+def all_unique(hc):
     for i in range(len(hc) - 1):
         for j in range(i + 1, len(hc)):
             if overlap(hc[i], hc[j]):
-                # every item in hc must be unique, except perhaps when we're
-                # trying to build possible hands at shutdown!
-                if shutdown:
-                    return False
-                else:
-                    raise RuntimeError("This shouldn't be happening! hc=%s" % (
-                        list(hc)))
+                return False
     return True
+
+
+def factorial(n):
+    if n < 0:
+        raise RuntimeError("n=%i" % n)
+    return 1 if n < 2 else n * factorial(n - 1)
+n_combinations = lambda n, k: factorial(n) / (factorial(k) * factorial(n - k))
 
 
 def default_infoset_format(_, holecards, board, bet_history):
@@ -42,13 +45,13 @@ class GameRules(object):
 
     Parameters
     ----------
-    players: int
+    players : int
         Number of players.
 
     rounds: list of `RoundInfo` object
         Each item specifies the rules for the given round.
 
-    deck: list of `Card` objects
+    deck : list of `Card` objects
         ...
 
     """
@@ -77,6 +80,24 @@ class GameRules(object):
 
 
 class RoundInfo(object):
+    """Rules (= game parameters) for a given round.
+
+    Parameters
+    ----------
+    holecards : int
+        Number of hole (i.e private) cards per player.
+
+    boardcards: int
+        Number of board (i.e community , i.e public) cards.
+
+    betsize : int
+        Starting bet size for round.
+
+    maxbets : int
+        Maximum bet size for round.
+
+    """
+
     def __init__(self, holecards, boardcards, betsize, maxbets):
         self.holecards = holecards
         self.boardcards = boardcards
@@ -85,8 +106,28 @@ class RoundInfo(object):
 
 
 class GameTree(object):
+    """Abstraction of game tree.
+
+    Parameters
+    ----------
+    rules : `GameRules` object
+        The rules of the game.
+
+    Attributes
+    ----------
+    nodes : list of `Node` objects
+        The nodes (decision and terminal nodes) of the game tree.
+
+    information_sets : dict
+        Each key is a string representing the corresponding information set.
+        The correspoonding value is the list of nodes which belongs to this
+        information set.
+    """
+
     def __init__(self, rules):
         self.rules = deepcopy(rules)
+        self.nodes = []
+        self.leafs = []
         self.information_sets = {}
         self.root = None
 
@@ -98,7 +139,7 @@ class GameTree(object):
         bets = [0] * self.rules.players
         # Collect blinds
         next_player = self.collect_blinds(committed, bets, 0)
-        holes = [()] * self.rules.players
+        holes = [() for _ in xrange(self.rules.players)]
         board = ()
         bet_history = ""
         self.root = self.build_rounds(
@@ -116,14 +157,54 @@ class GameTree(object):
         return next_player
 
     def deal_holecards(self, deck, holecards, players):
-        a = combinations(deck, holecards)
-        return filter(lambda x: all_unique(x), permutations(a, players))
+        """Deals hole (i.e private) cards from given deck.
+
+        Returns
+        -------
+        holecards : generator of `Card` objects
+            All possible hole-card deals.
+
+        proba : float
+            Each tuple of hole cards is drawn with this probability.
+        """
+        cards = permutations(combinations(deck, holecards), players)
+        nchoices = n_combinations(len(deck), holecards)
+
+        # XXX use numpy to execute the following computation
+        proba = 1.
+        low, high = nchoices - players + 1, nchoices
+        for salt in xrange(low, high + 1):
+            proba *= salt
+        proba = 1 / proba
+
+        return cards, proba
+
+    def commit_node(self, node):
+        """stores a given node in game tree database."""
+        self.nodes.append(node)
+
+        # place node into appropriate information set
+        if hasattr(node, "player_view"):
+            if node.player_view not in self.information_sets:
+                self.information_sets[node.player_view] = []
+            self.information_sets[node.player_view].append(node)
+
+        # handle leaf node
+        if isinstance(node, TerminalNode):
+            self.leafs.append(node)
+
+        return self
 
     def build_rounds(self, root, players_in, committed, holes, board, deck,
                      bet_history, round_idx, bets=None, next_player=0):
+        """Recursively build the rounds of the game hand."""
+        # if no rounds left, then end the hand
         if round_idx == len(self.rules.roundinfo):
-            return self.showdown(root, players_in, committed, holes, board,
-                                 deck, bet_history)
+            tnode = self.showdown(root, players_in, committed, holes, board,
+                                  deck, bet_history)
+            self.commit_node(tnode)
+            return
+
         bet_history += "/"
         cur_round = self.rules.roundinfo[round_idx]
         while not players_in[next_player]:
@@ -148,6 +229,7 @@ class GameTree(object):
             actions_this_round, bets)
 
     def get_next_player(self, cur_player, players_in):
+        """The player to act at the corrent node"""
         next_player = (cur_player + 1) % self.rules.players
         while not players_in[next_player]:
             next_player = (next_player + 1) % self.rules.players
@@ -157,12 +239,17 @@ class GameTree(object):
                         board, deck, bet_history, round_idx,
                         min_actions_this_round, actions_this_round, bets):
         cur_round = self.rules.roundinfo[round_idx]
+
+        # Deal holecards
+        if not cur_round.holecards:
+            raise RuntimeError
+        all_hc, proba = self.deal_holecards(
+            deck, cur_round.holecards, players_in.count(True))
         hnode = HolecardChanceNode(
             root, committed, holes, board, self.rules.deck, "",
-            cur_round.holecards)
-        # Deal holecards
-        all_hc = self.deal_holecards(
-            deck, cur_round.holecards, players_in.count(True))
+            cur_round.holecards, proba=proba)
+        self.commit_node(hnode)
+
         # Create a child node for every possible distribution
         for cur_holes in all_hc:
             dealt_cards = ()
@@ -192,10 +279,17 @@ class GameTree(object):
                          holes, board, deck, bet_history, round_idx,
                          min_actions_this_round, actions_this_round, bets):
         cur_round = self.rules.roundinfo[round_idx]
+
+        # reveal community cards
+        if not cur_round.boardcards:
+            raise RuntimeError
+        all_bc = combinations(deck, cur_round.boardcards)
+        proba = 1. / n_combinations(len(deck), cur_round.boardcards)
         bnode = BoardcardChanceNode(
             root, committed, holes, board, deck, bet_history,
-            cur_round.boardcards)
-        all_bc = combinations(deck, cur_round.boardcards)
+            cur_round.boardcards, proba=proba)
+        self.commit_node(bnode)
+
         for bc in all_bc:
             cur_board = board + bc
             cur_deck = filter(lambda x: not (x in bc), deck)
@@ -210,9 +304,11 @@ class GameTree(object):
                    actions_this_round, bets_this_round):
         # if everyone else folded, end the hand
         if players_in.count(True) == 1:
-            self.showdown(
+            tnode = self.showdown(
                 root, players_in, committed, holes, board, deck, bet_history)
+            self.commit_node(tnode)
             return
+
         # if everyone checked or the last raisor has been called, end the round
         if actions_this_round >= min_actions_this_round and \
            self.all_called_last_raisor_or_folded(players_in, bets_this_round):
@@ -223,23 +319,26 @@ class GameTree(object):
         cur_round = self.rules.roundinfo[round_idx]
         anode = ActionNode(root, committed, holes, board, deck,
                            bet_history, next_player, self.rules.infoset_format)
+
         # add the node to the information set
-        if anode.player_view not in self.information_sets:
-            self.information_sets[anode.player_view] = []
-        self.information_sets[anode.player_view].append(anode)
+        self.commit_node(anode)
+
         # get the next player to act
         next_player = self.get_next_player(next_player, players_in)
+
         # add a folding option if someone has bet more than this player
         if committed[anode.player] < max(committed):
             self.add_fold_child(
                 anode, next_player, players_in, committed, holes, board, deck,
                 bet_history, round_idx, min_actions_this_round,
                 actions_this_round, bets_this_round)
+
         # add a calling/checking option
         self.add_call_child(
             anode, next_player, players_in, committed, holes, board, deck,
             bet_history, round_idx, min_actions_this_round, actions_this_round,
             bets_this_round)
+
         # add a raising option if this player has not reached their max bet
         # level
         if cur_round.maxbets[anode.player] > max(bets_this_round):
@@ -346,7 +445,7 @@ def multi_infoset_format(base_infoset_format, player, holecards, board,
 
 
 class PublicTree(GameTree):
-
+    pass
     def __init__(self, rules):
         GameTree.__init__(
             self, GameRules(
@@ -459,8 +558,7 @@ class PublicTree(GameTree):
         # Get all the possible holecard matchups for a given showdown.
         # Every card must be unique because two players cannot have the same
         # holecard.
-        return list(filter(lambda x: all_unique(x, shutdown=True),
-                           product(*holes)))
+        return list(filter(lambda x: all_unique(x), product(*holes)))
 
     def calc_payoffs(self, hands, scores, players_in, committed, pot):
         winners = []
@@ -481,16 +579,31 @@ class PublicTree(GameTree):
 
 
 class Node(object):
+    """Abstraction of game tree node.
 
-    def __init__(self, parent, committed, holecards, board, deck, bet_history):
+    Parameters
+    ----------
+    proba : float in the interval [0, 1]
+        Probability with which this node is forked from its parent.
+
+    Attributes
+    ----------
+    proba_ : float in the interval [0, 1]
+        The probability (induced by the chance player) of the path from
+        the root node to this node.
+    """
+    def __init__(self, parent, committed, holecards, board, deck, bet_history,
+                 proba=1.):
         self.committed = deepcopy(committed)
         self.holecards = deepcopy(holecards)
         self.board = deepcopy(board)
         self.deck = deepcopy(deck)
         self.bet_history = deepcopy(bet_history)
+        self.proba = self.proba_ = proba
         if parent:
             self.parent = parent
             self.parent.add_child(self)
+            self.proba_ *= parent.proba_
 
     def add_child(self, child):
         if self.children is None:
@@ -499,47 +612,48 @@ class Node(object):
             self.children.append(child)
 
     def __repr__(self):
-        """For pretty-print the node."""
+        """For pretty-printing the node."""
         tokenize = lambda stuff: ('"%s"' % stuff) if isinstance(
             stuff, basestring) else stuff
         return "%s(" % (self.__class__.__name__) + ", ".join(
             ["%s=%s" % (k, tokenize(getattr(self, k)))
              for k in ["bet_history", "deck", "holecards", "player",
-                       "player_view", "committed"] if hasattr(self, k)]) + ")"
+                       "player_view", "committed", "proba_", "payoffs"]
+        if hasattr(self, k)]) + ")"
 
 
 class TerminalNode(Node):
     def __init__(self, parent, committed, holecards, board, deck, bet_history,
-                 payoffs, players_in):
+                 payoffs, players_in, **kwargs):
         Node.__init__(self, parent, committed,
-                      holecards, board, deck, bet_history)
+                      holecards, board, deck, bet_history, **kwargs)
         self.payoffs = payoffs
         self.players_in = deepcopy(players_in)
 
 
 class HolecardChanceNode(Node):
     def __init__(self, parent, committed, holecards, board, deck, bet_history,
-                 todeal):
+                 todeal, **kwargs):
         Node.__init__(self, parent, committed,
-                      holecards, board, deck, bet_history)
+                      holecards, board, deck, bet_history, **kwargs)
         self.todeal = todeal
         self.children = []
 
 
 class BoardcardChanceNode(Node):
     def __init__(self, parent, committed, holecards, board, deck, bet_history,
-                 todeal):
+                 todeal, **kwargs):
         Node.__init__(self, parent, committed,
-                      holecards, board, deck, bet_history)
+                      holecards, board, deck, bet_history, **kwargs)
         self.todeal = todeal
         self.children = []
 
 
 class ActionNode(Node):
     def __init__(self, parent, committed, holecards, board, deck, bet_history,
-                 player, infoset_format):
+                 player, infoset_format, **kwargs):
         Node.__init__(self, parent, committed,
-                      holecards, board, deck, bet_history)
+                      holecards, board, deck, bet_history, **kwargs)
         self.player = player
         self.children = []
         self.raise_action = None

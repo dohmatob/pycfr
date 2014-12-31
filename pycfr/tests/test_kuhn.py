@@ -11,3 +11,11 @@ def test_infosets():
         assert_equal(len(infosets), 6)
         for infoset in infosets.itervalues():
             assert_equal(len(infoset), 2)
+
+
+def test_node_count():
+    # It's known that the game tree for Kuhn Poker has 55 nodes, of which
+    # 30 are leafs
+    kuhn_gt = kuhn_gametree()
+    assert_equal(len(kuhn_gt.nodes), 55)
+    assert_equal(len(kuhn_gt.leafs), 30)

@@ -146,7 +146,7 @@ For example, run
 
     python plot_sequence_form.py
 
-The source code for the previous example is
+The previous exampel demos the sequence-form representation [5].
 
 ```python
 """
@@ -214,3 +214,6 @@ References
 [3] Johanson, M., Bard, N., Lanctot, M., Gibson, R., & Bowling, M. (2012). Efficient Nash equilibrium approximation through Monte Carlo counterfactual regret minimization. In Proceedings of the 11th International Conference on Autonomous Agents and Multiagent Systems-Volume 2 (pp. 837-846). International Foundation for Autonomous Agents and Multiagent Systems.
 
 [4] Johanson, M., Waugh, K., Bowling, M., & Zinkevich, M. (2011). Accelerating best response calculation in large extensive games. In Proceedings of the Twenty-Second international joint conference on Artificial Intelligence-Volume Volume One (pp. 258-265). AAAI Press.
+
+[5] Benhard von Stengel (1996). Efficient Computation of Behavior Strategies
+Games and Economic Behavior, vol 14 (pp. 220-246), Academic Press.

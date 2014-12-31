@@ -28,7 +28,7 @@ for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
         plt.axis('off')
         plt.title(["$E$", "$F$"][player])
 
-        # show payoff matrix
+        # show payoff matrices
         ax = plt.subplot2grid((2, 2), (1, player))
         ax.matshow(gt.payoff_matrices[player])
         plt.axis('off')

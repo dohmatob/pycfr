@@ -147,6 +147,7 @@ For example, run
     python plot_sequence_form.py
 
 The source code for the previous example is
+
 ```python
 """
 Building game tree and sequence-form representation for Leduc and Kuhn pokers.

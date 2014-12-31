@@ -7,6 +7,12 @@ import matplotlib.pyplot as plt
 
 # buiild game tree, and sequence-form representation thereof
 leduc = leduc_gametree(with_sequence_form=True)
+for node in leduc.nodes:
+    try:
+        if "k" in node.player_view:
+            print node
+    except AttributeError:
+        pass
 
 plt.figure()
 plt.gray()

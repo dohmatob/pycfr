@@ -45,6 +45,17 @@ n_combinations = lambda n, k: factorial(n) / (factorial(k) * factorial(n - k))
 
 
 def default_infoset_format(_, holecards, board, bet_history):
+    """
+    Parameters
+    ----------
+    bet_history : string
+        Sequences of bets observed in the game upto and including the
+        current node. Each round begins with "/" character. The other
+        possible characters are:
+        - "r" : raise
+        - "k" : call
+        - "c" : check
+    """
     return "{0}{1}:{2}:".format("".join([str(x) for x in holecards]),
                                 "".join([str(x) for x in board]), bet_history)
 
@@ -400,7 +411,6 @@ class GameTree(object):
         amnt = max(bets_this_round)
         bets_this_round[root.player] = amnt
         marker = "k" if amnt else "c"
-        marker = "c"
         bet_history += marker  # '.%s%i' % (marker, root.player)
         self.build_bets(
             root, next_player, players_in, committed, holes, board, deck,
@@ -488,8 +498,7 @@ class GameTree(object):
         if hasattr(node, "author"):
             pieces = self.chop(node, node.author)
             for ant in pieces:
-                moves.append((ant.parent.player_view,
-                              ant.bet_history[-1]))
+                moves.append((ant.parent.player_view, ant.bet_history[-1]))
         return moves
 
     def build_sequences(self):
@@ -739,6 +748,14 @@ class Node(object):
 
     Parameters
     ----------
+    bet_history : string
+        Sequences of bets observed in the game upto and including the
+        current node. Each round begins with "/" character. The other
+        possible characters are:
+        - "r" : raise
+        - "k" : call
+        - "c" : check
+
     proba : float in the interval [0, 1]
         Probability with which this node is forked from its parent.
 

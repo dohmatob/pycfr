@@ -30,23 +30,23 @@ def test_gametree():
     assert(tree.root.children[0].children[0].bet_history == '/f')
     # /c
     assert(type(tree.root.children[0].children[1]) == ActionNode)
-    assert(tree.root.children[0].children[1].bet_history == '/c')
+    assert(tree.root.children[0].children[1].bet_history == '/k')
     assert(len(tree.root.children[0].children[1].children) == 1)
     assert(tree.root.children[0].children[1].player == 1)
     assert(tree.root.children[0].children[1].fold_action is None)
     assert(tree.root.children[0].children[1].call_action != None)
     assert(tree.root.children[0].children[1].raise_action is None)
-    assert(tree.root.children[0].children[1].player_view == "Kh:/c:")
+    assert(tree.root.children[0].children[1].player_view == "Kh:/k:")
     # /cc/ [boardcard]
     assert(
         type(tree.root.children[0].children[1].children[0]) == BoardcardChanceNode)
-    assert(tree.root.children[0].children[1].children[0].bet_history == '/cc/')
+    assert(tree.root.children[0].children[1].children[0].bet_history == '/kk/')
     assert(len(tree.root.children[0].children[1].children[0].children) == 2)
     # /cc/ [action]
     assert(
         type(tree.root.children[0].children[1].children[0].children[0]) == ActionNode)
     assert(tree.root.children[0].children[
-           1].children[0].children[0].bet_history == '/cc/')
+           1].children[0].children[0].bet_history == '/kk/')
     assert(
         len(tree.root.children[0].children[1].children[0].children[0].children) == 2)
     assert(tree.root.children[0].children[1].children[0].children[0].player == 0)
@@ -57,12 +57,12 @@ def test_gametree():
     assert(tree.root.children[0].children[
            1].children[0].children[0].raise_action != None)
     assert(tree.root.children[0].children[1].children[
-           0].children[0].player_view == 'AsKs:/cc/:')
+           0].children[0].player_view == 'AsKs:/kk/:')
     # /cc/r
     assert(
         type(tree.root.children[0].children[1].children[0].children[0].children[1]) == ActionNode)
     assert(tree.root.children[0].children[1].children[
-           0].children[0].children[1].bet_history == '/cc/r')
+           0].children[0].children[1].bet_history == '/kk/r')
     assert(
         len(tree.root.children[0].children[1].children[0].children[0].children[1].children) == 3)
     assert(tree.root.children[0].children[1].children[
@@ -74,12 +74,12 @@ def test_gametree():
     assert(tree.root.children[0].children[1].children[
            0].children[0].children[1].raise_action != None)
     assert(tree.root.children[0].children[1].children[
-           0].children[0].children[1].player_view == 'KhKs:/cc/r:')
+           0].children[0].children[1].player_view == 'KhKs:/kk/r:')
     # /cc/c
     assert(
         type(tree.root.children[0].children[1].children[0].children[0].children[0]) == ActionNode)
     assert(tree.root.children[0].children[1].children[
-           0].children[0].children[0].bet_history == '/cc/c')
+           0].children[0].children[0].bet_history == '/kk/c')
     assert(
         len(tree.root.children[0].children[1].children[0].children[0].children[0].children) == 2)
     assert(tree.root.children[0].children[1].children[
@@ -91,19 +91,19 @@ def test_gametree():
     assert(tree.root.children[0].children[1].children[
            0].children[0].children[0].raise_action != None)
     assert(tree.root.children[0].children[1].children[
-           0].children[0].children[0].player_view == 'KhKs:/cc/c:')
+           0].children[0].children[0].player_view == 'KhKs:/kk/c:')
     # /cc/cc
     assert(type(tree.root.children[0].children[1].children[
            0].children[0].children[0].children[0]) == TerminalNode)
     assert(tree.root.children[0].children[1].children[0].children[
-           0].children[0].children[0].bet_history == '/cc/cc')
+           0].children[0].children[0].bet_history == '/kk/cc')
     assert(tree.root.children[0].children[1].children[
            0].children[0].children[0].children[0].payoffs == [-3, 3])
     # /cc/cr
     assert(type(tree.root.children[0].children[1].children[
            0].children[0].children[0].children[1]) == ActionNode)
     assert(tree.root.children[0].children[1].children[0].children[
-           0].children[0].children[1].bet_history == '/cc/cr')
+           0].children[0].children[1].bet_history == '/kk/cr')
     assert(len(tree.root.children[0].children[1].children[
            0].children[0].children[0].children[1].children) == 3)
     assert(tree.root.children[0].children[1].children[
@@ -115,12 +115,12 @@ def test_gametree():
     assert(tree.root.children[0].children[1].children[
            0].children[0].children[0].children[1].raise_action != None)
     assert(tree.root.children[0].children[1].children[0].children[
-           0].children[0].children[1].player_view == 'AsKs:/cc/cr:')
+           0].children[0].children[1].player_view == 'AsKs:/kk/cr:')
     # /cc/crr
     assert(type(tree.root.children[0].children[1].children[
            0].children[0].children[0].children[1].children[2]) == ActionNode)
     assert(tree.root.children[0].children[1].children[0].children[
-           0].children[0].children[1].children[2].bet_history == '/cc/crr')
+           0].children[0].children[1].children[2].bet_history == '/kk/crr')
     assert(len(tree.root.children[0].children[1].children[
            0].children[0].children[0].children[1].children[2].children) == 2)
     assert(tree.root.children[0].children[1].children[0].children[
@@ -132,19 +132,19 @@ def test_gametree():
     assert(tree.root.children[0].children[1].children[0].children[
            0].children[0].children[1].children[2].raise_action is None)
     assert(tree.root.children[0].children[1].children[0].children[
-           0].children[0].children[1].children[2].player_view == 'KhKs:/cc/crr:')
+           0].children[0].children[1].children[2].player_view == 'KhKs:/kk/crr:')
     # /cc/crrf
     assert(type(tree.root.children[0].children[1].children[0].children[
            0].children[0].children[1].children[2].children[0]) == TerminalNode)
     assert(tree.root.children[0].children[1].children[0].children[0].children[
-           0].children[1].children[2].children[0].bet_history == '/cc/crrf')
+           0].children[1].children[2].children[0].bet_history == '/kk/crrf')
     assert(tree.root.children[0].children[1].children[0].children[
            0].children[0].children[1].children[2].children[0].payoffs == [5, -5])
     # /cc/crrc
     assert(type(tree.root.children[0].children[1].children[0].children[
            0].children[0].children[1].children[2].children[1]) == TerminalNode)
     assert(tree.root.children[0].children[1].children[0].children[0].children[
-           0].children[1].children[2].children[1].bet_history == '/cc/crrc')
+           0].children[1].children[2].children[1].bet_history == '/kk/crrk')
     assert(tree.root.children[0].children[1].children[0].children[
            0].children[0].children[1].children[2].children[1].payoffs == [-7, 7])
 
@@ -172,18 +172,18 @@ def test_publictree():
     assert(type(tree.root.children[0].children[1]) == ActionNode)
     assert(tree.root.children[0].children[1].player == 1)
     assert(tree.root.children[0].children[1].player_view == (
-        'As:/c:', 'Kh:/c:', 'Ks:/c:', 'Qs:/c:'))
+        'As:/k:', 'Kh:/k:', 'Ks:/k:', 'Qs:/k:'))
     assert_equal(len(tree.root.children[0].children[1].children), 1)
     # /cc/ [boardcard]
     assert(
         type(tree.root.children[0].children[1].children[0]) == BoardcardChanceNode)
-    assert(tree.root.children[0].children[1].children[0].bet_history == '/cc/')
+    assert(tree.root.children[0].children[1].children[0].bet_history == '/kk/')
     assert(len(tree.root.children[0].children[1].children[0].children) == 4)
     # xAs:/cc/ [action]
     assert(
         type(tree.root.children[0].children[1].children[0].children[0]) == ActionNode)
     assert(tree.root.children[0].children[
-           1].children[0].children[0].bet_history == '/cc/')
+           1].children[0].children[0].bet_history == '/kk/')
     assert(
         len(tree.root.children[0].children[1].children[0].children[0].children) == 2)
     assert(tree.root.children[0].children[1].children[0].children[0].player == 0)
@@ -194,12 +194,12 @@ def test_publictree():
     assert(tree.root.children[0].children[
            1].children[0].children[0].raise_action != None)
     assert(tree.root.children[0].children[1].children[0].children[
-           0].player_view == ('KhAs:/cc/:', 'KsAs:/cc/:', 'QsAs:/cc/:'))
+           0].player_view == ('KhAs:/kk/:', 'KsAs:/kk/:', 'QsAs:/kk/:'))
     # xAs:/cc/r
     assert(
         type(tree.root.children[0].children[1].children[0].children[0].children[1]) == ActionNode)
     assert(tree.root.children[0].children[1].children[
-           0].children[0].children[1].bet_history == '/cc/r')
+           0].children[0].children[1].bet_history == '/kk/r')
     assert(
         len(tree.root.children[0].children[1].children[0].children[0].children[1].children) == 3)
     assert(tree.root.children[0].children[1].children[
@@ -211,19 +211,19 @@ def test_publictree():
     assert(tree.root.children[0].children[1].children[
            0].children[0].children[1].raise_action != None)
     assert(tree.root.children[0].children[1].children[0].children[0].children[
-           1].player_view == ('KhAs:/cc/r:', 'KsAs:/cc/r:', 'QsAs:/cc/r:'))
+           1].player_view == ('KhAs:/kk/r:', 'KsAs:/kk/r:', 'QsAs:/kk/r:'))
     # xAs:/cc/rc
     assert(type(tree.root.children[0].children[1].children[
            0].children[0].children[1].children[1]) == TerminalNode)
     assert(tree.root.children[0].children[1].children[0].children[
-           0].children[1].children[1].bet_history == '/cc/rc')
+           0].children[1].children[1].bet_history == '/kk/rk')
     assert(tree.root.children[0].children[1].children[0].children[0].children[1].children[1].payoffs == {((Card(13, 1),), (Card(13, 2),)): [0, 0], ((Card(13, 1),), (Card(12, 1),)): [
            5, -5], ((Card(13, 2),), (Card(13, 1),)): [0, 0], ((Card(13, 2),), (Card(12, 1),)): [5, -5], ((Card(12, 1),), (Card(13, 2),)): [-5, 5], ((Card(12, 1),), (Card(13, 1),)): [-5, 5]})
     # xKh:/cc/rc
     assert(type(tree.root.children[0].children[1].children[
            0].children[1].children[1].children[1]) == TerminalNode)
     assert(tree.root.children[0].children[1].children[0].children[
-           1].children[1].children[1].bet_history == '/cc/rc')
+           1].children[1].children[1].bet_history == '/kk/rk')
     assert(tree.root.children[0].children[1].children[0].children[1].children[1].children[1].payoffs == {((Card(13, 1),), (Card(14, 1),)): [5, -5], ((Card(13, 1),), (Card(12, 1),)): [
            5, -5], ((Card(14, 1),), (Card(13, 1),)): [-5, 5], ((Card(14, 1),), (Card(12, 1),)): [5, -5], ((Card(12, 1),), (Card(14, 1),)): [-5, 5], ((Card(12, 1),), (Card(13, 1),)): [-5, 5]})
 

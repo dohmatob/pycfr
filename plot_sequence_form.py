@@ -15,7 +15,7 @@ for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
                                                       len(gt.leafs))
     plt.figure(figsize=(13, 7))
     plt.suptitle("Sequence-form representation of %s Poker" % name)
-    plt.gray()
+    # plt.gray()
     for player, (E, _) in gt.constraints.iteritems():
         print "Player %i" % player
         print "\t# infosets : %i" % (

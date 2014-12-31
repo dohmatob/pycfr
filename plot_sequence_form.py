@@ -6,10 +6,10 @@ from pycfr.pokergames import (leduc_gametree, kuhn_gametree,
                               half_street_kuhn_gametree)
 import matplotlib.pyplot as plt
 
-# build game tree, and sequence-form representation thereof
 for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
                        [kuhn_gametree, leduc_gametree,
                         half_street_kuhn_gametree]):
+    # build game tree, and sequence-form representation thereof
     gt = maker(with_sequence_form=True)
     print "=== %s Poker (%i nodes, %i leafs): ===" % (name, len(gt.nodes),
                                                       len(gt.leafs))

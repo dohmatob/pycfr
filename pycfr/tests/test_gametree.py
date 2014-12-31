@@ -166,14 +166,14 @@ def test_publictree():
     assert(tree.root.children[0].raise_action == None)
     # /f
     assert(type(tree.root.children[0].children[0]) == TerminalNode)
-    assert(tree.root.children[0].children[0].payoffs == {((Card(14, 1),), (Card(13, 1),)): [-2, 2], ((Card(14, 1),), (Card(13, 2),)): [-2, 2], ((Card(14, 1),), (Card(12, 1),)): [-2, 2], ((Card(13, 1),), (Card(14, 1),)): [-2, 2], ((Card(13, 1),), (Card(13, 2),)): [-2, 2], (
+    assert_equal(tree.root.children[0].children[0].payoffs, {((Card(14, 1),), (Card(13, 1),)): [-2, 2], ((Card(14, 1),), (Card(13, 2),)): [-2, 2], ((Card(14, 1),), (Card(12, 1),)): [-2, 2], ((Card(13, 1),), (Card(14, 1),)): [-2, 2], ((Card(13, 1),), (Card(13, 2),)): [-2, 2], (
         (Card(13, 1),), (Card(12, 1),)): [-2, 2], ((Card(13, 2),), (Card(14, 1),)): [-2, 2], ((Card(13, 2),), (Card(13, 1),)): [-2, 2], ((Card(13, 2),), (Card(12, 1),)): [-2, 2], ((Card(12, 1),), (Card(14, 1),)): [-2, 2], ((Card(12, 1),), (Card(13, 2),)): [-2, 2], ((Card(12, 1),), (Card(13, 1),)): [-2, 2]})
     # /c
     assert(type(tree.root.children[0].children[1]) == ActionNode)
     assert(tree.root.children[0].children[1].player == 1)
     assert(tree.root.children[0].children[1].player_view == (
         'As:/c:', 'Kh:/c:', 'Ks:/c:', 'Qs:/c:'))
-    assert(len(tree.root.children[0].children[1].children) == 1)
+    assert_equal(len(tree.root.children[0].children[1].children), 1)
     # /cc/ [boardcard]
     assert(
         type(tree.root.children[0].children[1].children[0]) == BoardcardChanceNode)

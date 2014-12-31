@@ -41,17 +41,17 @@ def kuhn_rules():
                      infoset_format=leduc_format)
 
 
-def kuhn_gametree():
+def kuhn_gametree(**kwargs):
     rules = kuhn_rules()
     tree = GameTree(rules)
-    tree.build()
+    tree.build(**kwargs)
     return tree
 
 
-def kuhn_publictree():
+def kuhn_publictree(**kwargs):
     rules = kuhn_rules()
     tree = PublicTree(rules)
-    tree.build()
+    tree.build**kwargs()
     return tree
 
 
@@ -82,17 +82,17 @@ def leduc_rules():
                      infoset_format=leduc_format)
 
 
-def leduc_gametree():
+def leduc_gametree(**kwargs):
     rules = leduc_rules()
     tree = GameTree(rules)
-    tree.build()
+    tree.build(**kwargs)
     return tree
 
 
-def leduc_publictree():
+def leduc_publictree(**kwargs):
     rules = leduc_rules()
     tree = PublicTree(rules)
-    tree.build()
+    tree.build(**kwargs)
     return tree
 
 

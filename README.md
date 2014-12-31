@@ -138,8 +138,8 @@ Tests are organized as follows:
 Note the tests are intended to be run from the main directory, e.g. `python test/test_gametree.py`. They make some assumptions about relative paths when importing modules and loading and saving files.
 
 
-Examples
---------
+Example scripts
+---------------
 Naming convention for demo scirpts is: plot_*.py.
 
 For example, run

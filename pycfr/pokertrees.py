@@ -2,11 +2,12 @@ from copy import deepcopy
 from functools import partial
 from itertools import combinations, permutations, product
 from collections import Counter
-from hand_evaluator import HandEvaluator
 import numpy as np
+from _mathutils import choose, numeroter
+from hand_evaluator import HandEvaluator
 
 # Possible player actions. Note that a check is equivalent to calling 0
-# (a "free call") and so is omitted from the code
+# (a "free call")
 FOLD = 0
 CALL = 1
 RAISE = 2
@@ -29,21 +30,6 @@ def all_unique(hc):
     return True
 
 
-def numeroter(start=0):
-    cnt = start
-    while True:
-        yield cnt
-        cnt += 1
-
-
-# Combinatoric helper functions.
-def factorial(n):
-    if n < 0:
-        raise RuntimeError("n=%i" % n)
-    return 1 if n < 2 else n * factorial(n - 1)
-n_combinations = lambda n, k: factorial(n) / (factorial(k) * factorial(n - k))
-
-
 def default_infoset_format(_, holecards, board, bet_history):
     """
     Parameters
@@ -52,6 +38,7 @@ def default_infoset_format(_, holecards, board, bet_history):
         Sequences of bets observed in the game upto and including the
         current node. Each round begins with "/" character. The other
         possible characters are:
+        - "f" : fold
         - "r" : raise
         - "k" : call
         - "c" : check
@@ -199,7 +186,7 @@ class GameTree(object):
             Each tuple of hole cards is drawn with this probability.
         """
         cards = permutations(combinations(deck, holecards), players)
-        nchoices = n_combinations(len(deck), holecards)
+        nchoices = choose(len(deck), holecards)
 
         # XXX use numpy to execute the following computation
         proba = 1.
@@ -316,7 +303,7 @@ class GameTree(object):
         if not cur_round.boardcards:
             raise RuntimeError
         all_bc = combinations(deck, cur_round.boardcards)
-        proba = 1. / n_combinations(len(deck), cur_round.boardcards)
+        proba = 1. / choose(len(deck), cur_round.boardcards)
         bnode = BoardcardChanceNode(
             root, committed, holes, board, deck, bet_history,
             cur_round.boardcards, name=next(self.cur_node_id), proba=proba)
@@ -752,6 +739,7 @@ class Node(object):
         Sequences of bets observed in the game upto and including the
         current node. Each round begins with "/" character. The other
         possible characters are:
+        - "f" : fold
         - "r" : raise
         - "k" : call
         - "c" : check

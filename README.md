@@ -146,7 +146,7 @@ For example, run
 
     python plot_sequence_form.py
 
-The previous exampel demos the sequence-form representation [5].
+The previous example demonstrates the sequence-form representation proposed in [5].
 
 TODO
 ----

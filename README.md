@@ -149,6 +149,10 @@ For example, run
 The source code for the previous example is
 
 ```python
+"""
+Building game tree and sequence-form representation for Leduc and Kuhn pokers.
+"""
+
 from pycfr.pokergames import leduc_gametree, kuhn_gametree
 import matplotlib.pyplot as plt
 

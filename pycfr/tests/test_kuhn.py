@@ -19,3 +19,17 @@ def test_node_count():
     kuhn_gt = kuhn_gametree()
     assert_equal(len(kuhn_gt.nodes), 55)
     assert_equal(len(kuhn_gt.leafs), 30)
+
+
+def test_payoffs():
+    kuhn_gt = kuhn_gametree()
+    assert_equal(len(kuhn_gt.nodes), 55)
+    assert_equal(len(kuhn_gt.leafs), 30)
+    payoffs = []
+    for node in kuhn_gt.nodes:
+        if "Terminal" in node.__class__.__name__:
+            payoffs.append(node.payoffs[0])
+    payoffs = sorted(payoffs)
+    assert_equal(payoffs, [-2, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1, -1,
+                           -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2,
+                           2, 2, 2])

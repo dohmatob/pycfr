@@ -16,10 +16,10 @@ def half_street_kuhn_rules():
                      infoset_format=leduc_format)
 
 
-def half_street_kuhn_gametree():
+def half_street_kuhn_gametree(**kwargs):
     rules = half_street_kuhn_rules()
     tree = GameTree(rules)
-    tree.build()
+    tree.build(**kwargs)
     return tree
 
 

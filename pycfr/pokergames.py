@@ -48,10 +48,10 @@ def kuhn_gametree(**kwargs):
     return tree
 
 
-def kuhn_publictree(**kwargs):
+def kuhn_publictree():
     rules = kuhn_rules()
     tree = PublicTree(rules)
-    tree.build**kwargs()
+    tree.build()
     return tree
 
 

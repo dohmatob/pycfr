@@ -484,13 +484,14 @@ class GameTree(object):
         moves = []
         if hasattr(node, "author"):
             pieces = self.chop(node, node.author)
-            for ant in pieces:
-                moves.append((ant.parent.player_view, ant.bet_history[-1]))
+            for anc in pieces:
+                moves.append((self.information_sets.keys().index(
+                    anc.parent.player_view), anc.bet_history[-1]))
         return moves
 
     def build_sequences(self):
         """Each sequence for a player is of the form (i_1, a_1)(i_2,, a_2)...,
-        where each a_j is an action at the information set i_j.
+        where each a_j is an action at the information set indexed by i_j.
         """
         self.sequences = {}
         for player in xrange(self.rules.players):
@@ -572,8 +573,6 @@ class GameTree(object):
         matrices. This can be done by appropriately permuting the list of
         sequences of each (non-chance) player.
         """
-        if self.rules.players != 2:
-            raise RuntimeError("Minimax only available for heads-up!")
         self.payoff_matrices = [np.zeros(map(len, self.sequences.values()))
                                 for _ in self.sequences]
         for leaf in self.leafs:

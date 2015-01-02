@@ -13,6 +13,7 @@ for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
     gt = maker(with_sequence_form=True)
     print "=== %s Poker (%i nodes, %i leafs): ===" % (name, len(gt.nodes),
                                                       len(gt.leafs))
+
     plt.figure(figsize=(13, 7))
     plt.suptitle("Sequence-form representation of %s Poker" % name)
     for player, (E, _) in gt.constraints.iteritems():
@@ -23,15 +24,15 @@ for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
 
         # show constraints on each player's complex
         ax = plt.subplot2grid((2, 2), (0, player))
-        ax.matshow(E)
-        plt.axis('off')
+        ax.matshow(E, interpolation="nearest")
         plt.title(["$E$", "$F$"][player])
+        plt.axis("off")
 
         # show payoff matrices
         ax = plt.subplot2grid((2, 2), (1, player))
-        ax.matshow(gt.payoff_matrices[player])
-        plt.axis('off')
+        ax.matshow(gt.payoff_matrices[player], interpolation="nearest")
         plt.title(["$A$", "$B$"][player])
+        plt.axis("off")
     plt.tight_layout()
     print "_" * 80
 plt.show()

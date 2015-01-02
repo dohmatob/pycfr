@@ -513,7 +513,7 @@ class GameTree(object):
         """Generates matrices for the equality constraints on each player's
         admissible realization plans.
 
-        The constraints for player p are a pair E_p, e_p corresponding to a
+        The constraints for player p are a pair (E_p, e_p) corresponding to a
         set of linear constraints read as "E_p x = e_p". E_p has as many
         columns as player p has sequences, and as many rows as there
         information sets for player p, plus 1.

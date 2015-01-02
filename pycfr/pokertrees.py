@@ -473,19 +473,21 @@ class GameTree(object):
     def chop(self, node, player):
         """Returns list of all the nodes played by player along given path."""
         buf = ()
-        while node.parent:
-            if isinstance(node.parent, ActionNode):
-                if node.parent.player == player:
-                    buf += (node,)
-            node = node.parent
+        while 0xDEADBEEF:
+            node = self.last_node_played(node, player)
+            if node is None:
+                break
+            else:
+                buf += (node,)
+                node = node.parent
         return buf[::-1]
 
-    def node2seq(self, node):
-        """Returns sequence of information-set-relabelled moves made
-        by previous player along this path."""
+    def node2seq(self, path):
+        """Returns sequence of moves made by previous player along this path.
+        """
         moves = []
-        if hasattr(node, "author"):
-            pieces = self.chop(node, node.author)
+        if hasattr(path, "author"):
+            pieces = self.chop(path, path.author)
             for anc in pieces:
                 moves.append((anc.parent.player_view, anc.bet_history[-1]))
         return moves
@@ -600,7 +602,7 @@ def multi_infoset_format(base_infoset_format, player, holecards, board,
 
 
 class PublicTree(GameTree):
-    # XXX This sub-class should disappea! It's is code duplication!
+    # XXX This sub-class should disappear! It's is code duplication!
     def __init__(self, rules):
         GameTree.__init__(
             self, GameRules(

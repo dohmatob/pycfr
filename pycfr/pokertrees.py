@@ -496,7 +496,7 @@ class GameTree(object):
         """Each sequence for a player is of the form (i_1, a_1)(i_2,, a_2)...,
         where each a_j is an action at the information set identified with i_j
         """
-        print "Bulding players' move sequences..."
+        print "Bulding players' action sequences..."
         self.sequences = {}
         for player in xrange(self.rules.players):
             self.sequences[player] = [[]]

@@ -532,8 +532,8 @@ class GameTree(object):
             # loop over sequences for player
             for i, sigma in enumerate(self.sequences[player]):
                 mem = {}
-                # loop over all sequences for which the sequence tau is a
-                # preix
+                # loop over all sequences which are extensions of tau by
+                # a single move
                 for j, tau in enumerate(self.sequences[player]):
                     if tau and tau[:-1] == sigma:
                         # sigma is the (unique) antecedant of tau

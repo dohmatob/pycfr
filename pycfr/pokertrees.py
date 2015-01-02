@@ -509,8 +509,6 @@ class GameTree(object):
             seq = self.node2seq(node)
             if seq not in self.sequences[prev]:
                 self.sequences[prev].append(seq)
-        for sequences in self.sequences.itervalues():
-            sequences.sort()
         return self.sequences
 
     def build_constraints(self):

@@ -10,9 +10,10 @@ for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
                        [kuhn_gametree, leduc_gametree,
                         half_street_kuhn_gametree]):
     # build game tree, and sequence-form representation thereof
+    print "=== %s Poker ===" % name
     gt = maker(with_sequence_form=True)
-    print "=== %s Poker (%i nodes, %i leafs): ===" % (name, len(gt.nodes),
-                                                      len(gt.leafs))
+    print "Game tree has %i nodes, of which %s are leafs." % (len(gt.nodes),
+                                                              len(gt.leafs))
 
     plt.figure(figsize=(13, 7))
     plt.suptitle("Sequence-form representation of %s Poker" % name)

@@ -4,7 +4,7 @@ from itertools import combinations, permutations, product
 from collections import Counter
 import numpy as np
 from _mathutils import choose, numeroter
-from hand_evaluator import HandEvaluator
+from pokereval.hand_evaluator import HandEvaluator
 
 # Possible player actions. Note that a check is equivalent to calling 0
 # (a "free call")

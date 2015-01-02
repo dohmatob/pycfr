@@ -1,5 +1,5 @@
 from pokertrees import (RoundInfo, GameTree, GameRules, PublicTree)
-from card import Card
+from pokereval.card import Card
 
 
 def kuhn_eval(hc, _):

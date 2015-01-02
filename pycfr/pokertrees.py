@@ -461,13 +461,13 @@ class GameTree(object):
         return dict((k, v) for k, v in self.information_sets.iteritems()
                     if v[0].player == player)
 
-    def last_node_played(self, node, player):
-        """Returns the last node played by given player."""
-        while node.parent:
-            if isinstance(node.parent, ActionNode):
-                if node.parent.player == player:
-                    return node
-            node = node.parent
+    def last_node_played(self, path, player):
+        """Returns the last node played by given player along given path."""
+        while path.parent:
+            if isinstance(path.parent, ActionNode):
+                if path.parent.player == player:
+                    return path
+            path = path.parent
         return None
 
     def chop(self, node, player):

@@ -588,8 +588,8 @@ class GameTree(object):
                 # Compute expected payoff vector when each player plays the
                 # sequence indicated by its index in idx. Refer to equation
                 # (3.7) on page 228 of of [1]
-                acc = leaf.payoffs[player] * leaf.proba_
-                self.payoff_matrices[player][idx] += acc
+                self.payoff_matrices[player][idx] += leaf.payoffs[
+                    player] * leaf.proba_
         return self.payoff_matrices
 
 

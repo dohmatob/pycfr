@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 from pycfr.pokergames import (leduc_gametree, kuhn_gametree,
                               half_street_kuhn_gametree)
 
-for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
-                       [kuhn_gametree, leduc_gametree,
-                        half_street_kuhn_gametree]):
+for name, maker in zip(["Kuhn", "Half-street Kuhn", "Leduc"],
+                       [kuhn_gametree, half_street_kuhn_gametree,
+                        leduc_gametree]):
     # build game tree, and sequence-form representation thereof
     print "=== %s Poker ===" % name
     gt = maker(with_sequence_form=True)

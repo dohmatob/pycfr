@@ -145,6 +145,8 @@ class GameTree(object):
         self.cur_node_id = numeroter(0)
 
     def build(self, with_sequence_form=False):
+        print "Building game tree..."
+
         # Assume everyone is in
         players_in = [True] * self.rules.players
         # Collect antes
@@ -485,14 +487,14 @@ class GameTree(object):
         if hasattr(node, "author"):
             pieces = self.chop(node, node.author)
             for anc in pieces:
-                moves.append((self.information_sets.keys().index(
-                    anc.parent.player_view), anc.bet_history[-1]))
+                moves.append((anc.parent.player_view, anc.bet_history[-1]))
         return moves
 
     def build_sequences(self):
         """Each sequence for a player is of the form (i_1, a_1)(i_2,, a_2)...,
-        where each a_j is an action at the information set indexed by i_j.
+        where each a_j is an action at the information set identified with i_j
         """
+        print "Bulding players' move sequences..."
         self.sequences = {}
         for player in xrange(self.rules.players):
             self.sequences[player] = [[]]
@@ -518,6 +520,7 @@ class GameTree(object):
         columns as player p has sequences, and as many rows as there
         information sets for player p, plus 1.
         """
+        print "Building the constraints on players' strategy profiles..."
         self.constraints = {}
 
         # loop over players
@@ -544,7 +547,7 @@ class GameTree(object):
                     row[i] = -1.
                     row[where] = 1.
                     E.append(row)
-            # right handside, e
+            # compute right handside (e) of constraints "Ex = e"
             e = np.zeros(len(self.get_player_information_sets(player)) + 1)
             e[0] = 1.
             self.constraints[player] = np.array(E), e
@@ -573,6 +576,7 @@ class GameTree(object):
         matrices. This can be done by appropriately permuting the list of
         sequences of each (non-chance) player.
         """
+        print "Building payoff matrices..."
         self.payoff_matrices = [np.zeros(map(len, self.sequences.values()))
                                 for _ in self.sequences]
         for leaf in self.leafs:

@@ -18,9 +18,9 @@ for name, maker in zip(["Kuhn", "Leduc", "Half-street Kuhn"],
     plt.suptitle("Sequence-form representation of %s Poker" % name)
     for player, (E, _) in gt.constraints.iteritems():
         print "Player %i" % player
-        print "\t# infosets : %i" % (
+        print "\t# information sets: %i" % (
             len(gt.get_player_information_sets(player)))
-        print "\t# sequences: %i" % len(gt.sequences[player])
+        print "\t# action sequences: %i" % len(gt.sequences[player])
 
         # show constraints on each player's complex
         ax = plt.subplot2grid((2, 2), (0, player))

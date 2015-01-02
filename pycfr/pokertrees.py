@@ -501,9 +501,7 @@ class GameTree(object):
         for player in xrange(self.rules.players):
             self.sequences[player] = [[]]
         for node in self.nodes:
-            if node.parent is None:
-                continue
-            if not hasattr(node, "author"):
+            if (not hasattr(node, "author")) or (node.parent is None):
                 continue
             prev = node.author
             seq = self.node2seq(node)
